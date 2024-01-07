@@ -72,9 +72,60 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const getBestMove = () => {
-        // This function will be implemented with the Minimax algorithm
-        // For simplicity, I'll provide a placeholder for now
-        return gameBoard.indexOf('') !== -1 ? gameBoard.indexOf('') : -1;
+        const emptySpaces = gameBoard.reduce((acc, val, index) => (val === '' ? [...acc, index] : acc), []);
+
+        let bestScore = -Infinity;
+        let bestMove = -1;
+
+        emptySpaces.forEach((index) => {
+            gameBoard[index] = 'O';
+            const score = minimax(gameBoard, 0, false);
+            gameBoard[index] = '';
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = index;
+            }
+        });
+
+        return bestMove;
+    };
+
+    const minimax = (board, depth, isMaximizing) => {
+        const scores = {
+            X: -1,
+            O: 1,
+            T: 0,
+        };
+
+        const winner = checkWinner();
+        if (winner !== null) {
+            return scores[winner];
+        }
+
+        if (isMaximizing) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    const score = minimax(board, depth + 1, false);
+                    board[i] = '';
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === '') {
+                    board[i] = 'X';
+                    const score = minimax(board, depth + 1, true);
+                    board[i] = '';
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
     };
 
     renderBoard();
