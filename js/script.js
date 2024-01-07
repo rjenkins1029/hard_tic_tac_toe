@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
-    const cells = document.querySelectorAll('.cell');
     const resultDisplay = document.getElementById('result');
     const resetButton = document.getElementById('resetBtn');
 
     let currentPlayer = 'X';
-    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+    let gameBoard = Array(9).fill('');
     let gameActive = true;
 
     const checkWinner = () => {
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (gameBoard[index] || !gameActive) return;
 
         gameBoard[index] = currentPlayer;
-        cells[index].innerText = currentPlayer;
+        renderBoard();
 
         const winner = checkWinner();
         if (winner) {
@@ -44,19 +43,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const handleResetClick = () => {
-        gameBoard = ['', '', '', '', '', '', '', '', ''];
-        gameActive = true;
-        currentPlayer = 'X';
-        resultDisplay.innerText = '';
-        cells.forEach(cell => {
-            cell.innerText = '';
+    const renderBoard = () => {
+        board.innerHTML = '';
+        gameBoard.forEach((value, index) => {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.innerText = value;
+            cell.addEventListener('click', () => handleCellClick(index));
+            board.appendChild(cell);
         });
     };
 
-    cells.forEach((cell, index) => {
-        cell.addEventListener('click', () => handleCellClick(index));
-    });
+    const handleResetClick = () => {
+        gameBoard = Array(9).fill('');
+        gameActive = true;
+        currentPlayer = 'X';
+        resultDisplay.innerText = '';
+        renderBoard();
+    };
+
+    renderBoard();
 
     resetButton.addEventListener('click', handleResetClick);
 });
