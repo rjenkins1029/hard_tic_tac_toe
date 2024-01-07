@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Beautiful Tic Tac Toe</title>
+    <title>Exquisite Tic Tac Toe</title>
 </head>
 <body>
     <div class="container">
-        <h1>Beautiful Tic Tac Toe</h1>
+        <h1>Exquisite Tic Tac Toe</h1>
         <div id="board" class="board">
             <!-- Cells will be dynamically generated using JavaScript -->
         </div>
         <div id="result" class="result"></div>
-        <button id="resetBtn" class="reset-btn">Reset Game</button>
+        <div class="options">
+            <button id="resetBtn" class="reset-btn">Reset Game</button>
+            <label for="aiCheckbox">
+                <input type="checkbox" id="aiCheckbox"> Play against AI
+            </label>
+        </div>
     </div>
     <script src="js/script.js"></script>
 </body>

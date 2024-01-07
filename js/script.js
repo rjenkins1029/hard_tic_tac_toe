@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
     const resultDisplay = document.getElementById('result');
     const resetButton = document.getElementById('resetBtn');
+    const aiCheckbox = document.getElementById('aiCheckbox');
 
     let currentPlayer = 'X';
     let gameBoard = Array(9).fill('');
     let gameActive = true;
+    let isAgainstAI = false;
 
     const checkWinner = () => {
         const winPatterns = [
@@ -40,6 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+            if (isAgainstAI && currentPlayer === 'O') {
+                setTimeout(() => {
+                    const aiMove = getBestMove();
+                    handleCellClick(aiMove);
+                }, 500);
+            }
         }
     };
 
@@ -62,7 +71,18 @@ document.addEventListener('DOMContentLoaded', function () {
         renderBoard();
     };
 
+    const getBestMove = () => {
+        // This function will be implemented with the Minimax algorithm
+        // For simplicity, I'll provide a placeholder for now
+        return gameBoard.indexOf('') !== -1 ? gameBoard.indexOf('') : -1;
+    };
+
     renderBoard();
 
     resetButton.addEventListener('click', handleResetClick);
+
+    aiCheckbox.addEventListener('change', () => {
+        isAgainstAI = aiCheckbox.checked;
+        handleResetClick();
+    });
 });
