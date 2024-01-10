@@ -208,5 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateScoreDisplay();
     });
 
-    window.addEventListener('beforeunload', saveGameState);
-});
+    window.addEventListener('beforeunload', function () {
+        saveGameState();
+    })});
