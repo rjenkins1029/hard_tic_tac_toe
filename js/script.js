@@ -1,8 +1,9 @@
 console.log("Script is running");
 
-window.addEventListener('beforeunload', function () {
-    saveGameState();
-});
+(function () {
+    window.addEventListener('beforeunload', function () {
+        saveGameState();
+    });
 
 document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
@@ -210,4 +211,5 @@ document.addEventListener('DOMContentLoaded', function () {
         scores = { X: 0, O: 0, T: 0 };
         handleResetClick();
         updateScoreDisplay();
-    })});
+    });
+})()});
