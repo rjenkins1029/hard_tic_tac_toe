@@ -1,3 +1,5 @@
+console.log("Script is running");
+
 document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
     const resultDisplay = document.getElementById('result');
