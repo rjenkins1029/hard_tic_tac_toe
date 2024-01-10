@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const renderBoard = () => {
+        console.log('renderBoard function called');
         board.innerHTML = '';
         gameBoard.forEach((value, index) => {
             const cell = document.createElement('div');
