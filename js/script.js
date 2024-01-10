@@ -2,12 +2,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const board = document.getElementById('board');
     const resultDisplay = document.getElementById('result');
     const resetButton = document.getElementById('resetBtn');
-    const aiCheckbox = document.getElementById('aiCheckbox');
+    const scoreDisplay = document.getElementById('score');
+    const modal = document.getElementById('modal');
+    const aiButton = document.getElementById('aiButton');
+    const twoPlayerButton = document.getElementById('twoPlayerButton');
 
     let currentPlayer = 'X';
     let gameBoard = Array(9).fill('');
     let gameActive = true;
     let isAgainstAI = false;
+    let scores = { X: 0, O: 0, T: 0 };
 
     const checkWinner = () => {
         const winPatterns = [
@@ -37,9 +41,13 @@ document.addEventListener('DOMContentLoaded', function () {
             gameActive = false;
             if (winner === 'T') {
                 resultDisplay.innerText = "It's a tie!";
+                scores.T++;
             } else {
                 resultDisplay.innerText = `${winner} wins!`;
+                scores[winner]++;
             }
+            updateScoreDisplay();
+            saveGameState();
         } else {
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
 
@@ -69,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentPlayer = 'X';
         resultDisplay.innerText = '';
         renderBoard();
+        saveGameState();
     };
 
     const getBestMove = () => {
@@ -136,12 +145,66 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    renderBoard();
+    const updateScoreDisplay = () => {
+        scoreDisplay.innerText = `X: ${scores.X} | O: ${scores.O} | T: ${scores.T}`;
+    };
 
-    resetButton.addEventListener('click', handleResetClick);
+    const openModal = () => {
+        modal.style.display = 'block';
+    };
 
-    aiCheckbox.addEventListener('change', () => {
-        isAgainstAI = aiCheckbox.checked;
-        handleResetClick();
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+
+    const saveGameState = () => {
+        const gameState = {
+            currentPlayer,
+            gameBoard,
+            gameActive,
+            isAgainstAI,
+            scores
+        };
+        localStorage.setItem('ticTacToeGameState', JSON.stringify(gameState));
+    };
+
+    const loadGameState = () => {
+        const gameStateString = localStorage.getItem('ticTacToeGameState');
+        if (gameStateString) {
+            const gameState = JSON.parse(gameStateString);
+            currentPlayer = gameState.currentPlayer;
+            gameBoard = gameState.gameBoard;
+            gameActive = gameState.gameActive;
+            isAgainstAI = gameState.isAgainstAI;
+            scores = gameState.scores;
+
+            renderBoard();
+            updateScoreDisplay();
+            resultDisplay.innerText = gameActive ? '' : (currentPlayer === 'X' ? "Player X's turn" : "Player O's turn");
+        }
+    };
+
+    aiButton.addEventListener('click', () => {
+        isAgainstAI = true;
+        closeModal();
+        loadGameState();
     });
+
+    twoPlayerButton.addEventListener('click', () => {
+        isAgainstAI = false;
+        closeModal();
+        loadGameState();
+    });
+
+    renderBoard();
+    updateScoreDisplay();
+    loadGameState();
+
+    resetButton.addEventListener('click', () => {
+        scores = { X: 0, O: 0, T: 0 };
+        handleResetClick();
+        updateScoreDisplay();
+    });
+
+    window.addEventListener('beforeunload', saveGameState);
 });
